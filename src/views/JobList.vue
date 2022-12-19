@@ -2,7 +2,8 @@
     <div class="joblist">
 
         <div class="joblist-header">
-            <el-select v-model="queryForm.schedName" filterable placeholder="请选择" @change="handleSelectChange">
+            <el-select v-model="queryForm.schedName" filterable placeholder="请选择" @change="handleSelectChange"
+                clearable>
                 <el-option v-for="item in schedNames" :key="item" :label="item" :value="item">
                 </el-option>
             </el-select>
@@ -35,6 +36,7 @@
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button type="primary" size="mini" @click="tiggerJob(scope.row)">立即执行</el-button>
+                    <el-button type="primary" size="mini" @click="refreshJob(scope.row)">刷新</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -48,13 +50,12 @@
 </template>
 
 <script>
-import { getSchedNames, getJobs, triggerJob } from '../api'
+import { getSchedNames, getJobs, triggerJob, refreshJob } from '../api'
 export default {
     name: 'JobList',
     data() {
         return {
             schedNames: [],
-            tableData: [],
             tableData: [],
             queryForm: { schedName: '', jobName: '' },
             pageData: { pageNo: 1, pageSize: 10 },
@@ -105,14 +106,27 @@ export default {
                 if (data.status === 0) {
                     this.getSchedNameList()
                     this.getJobList()
-                    this.$message.info('任务执行成功')
+                    this.$message.success('任务执行成功')
                 } else {
                     this.$message.error(data.message)
                 }
             }).catch((err) => {
                 this.$message.error('系统繁忙，请稍后重试~')
             })
-        }
+        },
+        refreshJob(row) {
+            const data = { schedName: row.schedName, triggerName: row.triggerName, triggerGroup: row.triggerGroup }
+            refreshJob(data).then(({ data }) => {
+                if (data.status === 0) {
+                    this.getJobList()
+                    this.$message.success('任务状态已刷新')
+                } else {
+                    this.$message.error(data.message)
+                }
+            }).catch((err) => {
+                this.$message.error('系统繁忙，请稍后重试~')
+            })
+        },
     },
     mounted() {
         this.getSchedNameList()

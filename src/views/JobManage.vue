@@ -1,8 +1,9 @@
 <template>
-    <div class="joblist">
+    <div class="jobmanage">
 
-        <div class="joblist-header">
-            <el-select v-model="queryForm.schedName" filterable placeholder="请选择" @change="handleSelectChange">
+        <div class="jobmanage-header">
+            <el-select v-model="queryForm.schedName" filterable placeholder="请选择" @change="handleSelectChange"
+                clearable>
                 <el-option v-for="item in schedNames" :key="item" :label="item" :value="item">
                 </el-option>
             </el-select>
@@ -18,23 +19,31 @@
 
         <!-- 任务列表数据 -->
         <el-table :data="tableData" style="width: 100%" height="90%" stripe>
-            <el-table-column prop="schedName" label="Quartz实例名">
+            <el-table-column prop="schedName" label="Quartz实例名" width="200">
             </el-table-column>
-            <el-table-column prop="jobName" label="任务名称">
+            <el-table-column prop="jobName" width="260" label="任务名称">
             </el-table-column>
             <el-table-column prop="jobDesc" label="任务描述">
             </el-table-column>
-            <el-table-column prop="prevFireTime" label="上次执行时间">
+            <el-table-column prop="prevFireTime" width="160" label="上次执行时间">
             </el-table-column>
-            <el-table-column prop="nextFireTime" label="下次执行时间">
+            <el-table-column prop="nextFireTime" width="160" label="下次执行时间">
             </el-table-column>
-            <el-table-column prop="triggerState" label="触发器状态">
+            <el-table-column prop="triggerState" width="100" label="触发器状态">
             </el-table-column>
-            <el-table-column prop="nextFireTime" label="updateTime">
+            <el-table-column prop="nextFireTime" width="160" label="updateTime">
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="210" fixed="right">
                 <template slot-scope="scope">
-                    <el-button type="primary" size="mini" @click="tiggerJob(scope.row)">立即执行</el-button>
+                    <el-tooltip effect="light" placement="top" content="该操作不会删除Quart实例上的任务, 只是从任务列表中移除数据">
+                        <el-button type="primary" size="mini" @click="removeJob(scope.row)">移除</el-button>
+                    </el-tooltip>
+                    <el-tooltip effect="light" placement="top" content="该操作会永久删除Quart实例上的任务">
+                        <el-button type="primary" size="mini" @click="deleteJob(scope.row)">删除</el-button>
+                    </el-tooltip>
+                    <el-button type="primary" size="mini" @click="handlePauseResume(scope.row)">
+                        {{ scope.row.triggerState === 'PAUSED' ? '恢复' : '暂停' }}
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -48,9 +57,9 @@
 </template>
 
 <script>
-import { getSchedNames, getJobs, triggerJob } from '../api'
+import { getSchedNames, getJobs, removeJob, pauseJob, resumeJob, deleteJob, refreshJob } from '../api'
 export default {
-    name: 'JobList',
+    name: 'JobManage',
     data() {
         return {
             schedNames: [],
@@ -90,6 +99,7 @@ export default {
                 if (data.status === 0) {
                     const pageResponse = data.data
                     this.tableData = pageResponse.data
+                    console.log(this.tableData)
                     this.total = pageResponse.total
                 } else {
                     this.$message.error(data.message)
@@ -98,20 +108,96 @@ export default {
                 this.$message.error('系统繁忙，请稍后重试~')
             })
         },
-        tiggerJob(row) {
-            const data = { schedName: row.schedName, jobName: row.jobName, jobGroup: row.jobGroup }
-            triggerJob(data).then(({ data }) => {
+        refreshJob(schedName, triggerName, triggerGroup) {
+            const data = { schedName: schedName, triggerName: triggerName, triggerGroup: triggerGroup }
+            refreshJob(data).then(({ data }) => {
                 if (data.status === 0) {
-                    this.getSchedNameList()
                     this.getJobList()
-                    this.$message.info('任务执行成功')
+                    this.$message.success('任务状态已刷新')
                 } else {
                     this.$message.error(data.message)
                 }
             }).catch((err) => {
                 this.$message.error('系统繁忙，请稍后重试~')
             })
-        }
+        },
+        removeJob(row) {
+            const data = { schedName: row.schedName, triggerName: row.triggerName, triggerGroup: row.triggerGroup }
+            removeJob(data).then(({ data }) => {
+                if (data.status === 0) {
+                    this.getJobList()
+                    this.$message.success('任务已被移除')
+                } else {
+                    this.$message.error(data.message)
+                }
+            }).catch((err) => {
+                this.$message.error('系统繁忙，请稍后重试~')
+            })
+        },
+        handlePauseResume(row) {
+            const data = { schedName: row.schedName, jobName: row.jobName, jobGroup: row.jobGroup }
+            if (row.triggerState === 'PAUSED') {
+                resumeJob(data).then(({ data }) => {
+                    if (data.status === 0) {
+                        this.refreshJob(row.schedName, row.triggerName, row.triggerGroup)
+                        this.$message.success('任务已恢复')
+                    } else {
+                        this.$message.error(data.message)
+                    }
+                }).catch((err) => {
+                    this.$message.error('系统繁忙，请稍后重试~')
+                })
+            } else {
+                pauseJob(data).then(({ data }) => {
+                    if (data.status === 0) {
+                        this.refreshJob(row.schedName, row.triggerName, row.triggerGroup)
+                        this.$message.success('任务已暂停')
+                    } else {
+                        this.$message.error(data.message)
+                    }
+                }).catch((err) => {
+                    this.$message.error('系统繁忙，请稍后重试~')
+                })
+            }
+
+        },
+        resumeJob(row) {
+            const data = { schedName: row.schedName, jobName: row.jobName, jobGroup: row.jobGroup }
+            resumeJob(data).then(({ data }) => {
+                if (data.status === 0) {
+                    this.getJobList()
+                    this.$message.success('任务已恢复')
+                } else {
+                    this.$message.error(data.message)
+                }
+            }).catch((err) => {
+                this.$message.error('系统繁忙，请稍后重试~')
+            })
+        },
+        deleteJob(row) {
+            this.$confirm('此操作将永久删除Quartz实例上的任务, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                const data = { schedName: row.schedName, jobName: row.jobName, jobGroup: row.jobGroup }
+                deleteJob(data).then(({ data }) => {
+                    if (data.status === 0) {
+                        this.getJobList()
+                        this.$message.success('任务已删除')
+                    } else {
+                        this.$message.error(data.message)
+                    }
+                }).catch((err) => {
+                    this.$message.error('系统繁忙，请稍后重试~')
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
+        },
     },
     mounted() {
         this.getSchedNameList()
@@ -121,10 +207,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.joblist {
+.jobmanage {
     height: 90%;
 
-    .joblist-header {
+    .jobmanage-header {
         margin-bottom: 10px;
         display: flex;
     }

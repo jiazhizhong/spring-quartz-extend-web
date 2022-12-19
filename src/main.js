@@ -4,7 +4,7 @@ import {
   Row, Col, Button, Container, Header, Main, Aside, Menu, Submenu, MenuItem,
   MenuItemGroup, Dropdown, DropdownMenu, DropdownItem, Card, Table, TableColumn,
   Breadcrumb, BreadcrumbItem, Tag, Dialog, Form, FormItem, Input, Select, Option,
-  DatePicker, MessageBox, Message, Pagination
+  DatePicker, MessageBox, Message, Pagination, Tooltip
 } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import router from './router'
@@ -38,6 +38,7 @@ Vue.use(Select);
 Vue.use(Option);
 Vue.use(DatePicker)
 Vue.use(Pagination)
+Vue.use(Tooltip)
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$message = Message
 Vue.config.productionTip = false

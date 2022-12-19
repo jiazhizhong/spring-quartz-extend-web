@@ -4,6 +4,8 @@ import Main from '../views/Main.vue'
 import Login from '../views/Login.vue'
 import Home from '../views/Home.vue'
 import JobList from '../views/JobList.vue'
+import JobManage from '../views/JobManage.vue'
+import InstanceManage from '../views/InstanceManage.vue'
 
 Vue.use(VueRouter)
 
@@ -32,6 +34,22 @@ const routes = [
                 url: 'JobList.vue',
                 component: JobList
             },
+            {
+                path: '/jobmanage',
+                name: 'jobmanage',
+                label: '任务管理',
+                icon: 's-order',
+                url: 'JobManage.vue',
+                component: JobManage
+            },
+            {
+                path: '/instancemanage',
+                name: 'instancemanage',
+                label: '实例管理',
+                icon: 's-order',
+                url: 'InstanceManage.vue',
+                component: InstanceManage
+            }
         ]
     },
     {

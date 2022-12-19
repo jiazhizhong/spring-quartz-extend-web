@@ -37,6 +37,20 @@ export default {
                     label: '任务列表',
                     icon: 's-order',
                     url: 'JobList.vue'
+                },
+                {
+                    path: '/jobmanage',
+                    name: 'jobmanage',
+                    label: '任务管理',
+                    icon: 's-order',
+                    url: 'JobManage.vue'
+                },
+                {
+                    path: '/instancemanage',
+                    name: 'instancemanage',
+                    label: '实例管理',
+                    icon: 's-order',
+                    url: 'InstanceManage.vue'
                 }
             ]
         }

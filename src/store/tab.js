@@ -12,7 +12,6 @@ export default {
     },
     mutations: {
         addTab(state, payload) {
-            console.log(payload, 'addTab')
             if (payload.name !== 'home') {
                 const index = state.tabsList.findIndex(item => item.name === payload.name)
                 if (index === -1) {
