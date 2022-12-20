@@ -14,8 +14,9 @@
 </template>
 
 <script>
-import Cookie from 'js-cookie'
-import { getMenu } from '../api'
+import { login, getUserMenu } from '../api'
+import md5 from 'md5'
+import Cookies from 'js-cookie'
 export default {
     data() {
         return {
@@ -37,18 +38,33 @@ export default {
         handleLogin() {
             this.$refs.form.validate((valid) => {
                 if (valid) {
-                    getMenu(this.form).then(({ data }) => {
-                        console.log(data)
-                        if (data.code === 20000) {
-                            Cookie.set('token', data.data.token)
-                            this.$store.commit('setMenu', data.data.menu)
-                            this.$store.commit('addMenu', this.$router)
+                    const data = { username: this.form.username, password: md5(this.form.password) }
+                    login(data).then(({ data }) => {
+                        if (data.status === 0) {
+                            // 登录成功，获取用户菜单
+                            Cookies.set('token', '123456')
+                            this.getUserMenu()
                             this.$router.push('/home')
                         } else {
                             this.$message.error(data.message)
                         }
+                    }).catch((err) => {
+                        this.$message.error('系统繁忙，请稍后重试login~')
                     })
                 }
+            })
+        },
+        getUserMenu() {
+            getUserMenu().then(({ data }) => {
+                if (data.status === 0) {
+                    this.$store.commit('setMenu', data.data)
+                    this.$store.commit('addMenu', this.$router)
+                } else {
+                    this.$message.error(data.message)
+                }
+            }).catch((err) => {
+                console.log(err)
+                this.$message.error('系统繁忙，请稍后重试~')
             })
         }
     }

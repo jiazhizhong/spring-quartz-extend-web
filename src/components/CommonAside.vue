@@ -6,7 +6,7 @@
             <i :class="`el-icon-${item.icon}`"></i>
             <span slot="title">{{ item.label }}</span>
         </el-menu-item>
-        <el-submenu v-for="item in hasChildren" :key="item.name" :index="item.path">
+        <el-submenu v-for="item in hasChildren" :key="item.name" :index="item.name">
             <template slot="title">
                 <i :class="`el-icon-${item.icon}`"></i>
                 <span slot="title">{{ item.label }}</span>
@@ -23,44 +23,14 @@ import Cookies from 'js-cookie'
 export default {
     data() {
         return {
-            menuData: [
-                {
-                    path: '/home',
-                    name: 'home',
-                    label: '首页',
-                    icon: 's-home',
-                    url: 'Home.vue'
-                },
-                {
-                    path: '/joblist',
-                    name: 'joblist',
-                    label: '任务列表',
-                    icon: 's-order',
-                    url: 'JobList.vue'
-                },
-                {
-                    path: '/jobmanage',
-                    name: 'jobmanage',
-                    label: '任务管理',
-                    icon: 's-order',
-                    url: 'JobManage.vue'
-                },
-                {
-                    path: '/instancemanage',
-                    name: 'instancemanage',
-                    label: '实例管理',
-                    icon: 's-order',
-                    url: 'InstanceManage.vue'
-                }
-            ]
         }
     },
     methods: {
         handleOpen(key, keyPath) {
-            console.log(key, keyPath);
+            // console.log(key, keyPath);
         },
         handleClose(key, keyPath) {
-            console.log(key, keyPath);
+            // console.log(key, keyPath);
         },
         clickMenu(item) {
             // console.log(item)
@@ -82,9 +52,9 @@ export default {
         isCollapse() {
             return this.$store.state.menu.isCollapse
         },
-        // menuData() {
-        //     return JSON.parse(Cookies.get('menu')) || this.$store.state.menu.menuData
-        // }
+        menuData() {
+            return this.$store.state.menu.menuData
+        }
     }
 }
 </script>

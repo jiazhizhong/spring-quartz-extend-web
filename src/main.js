@@ -9,6 +9,7 @@ import {
 import 'element-ui/lib/theme-chalk/index.css'
 import router from './router'
 import store from './store'
+import Cookies from 'js-cookie'
 
 Vue.use(Row);
 Vue.use(Col);
@@ -43,8 +44,24 @@ Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$message = Message
 Vue.config.productionTip = false
 
+// 添加全局导航守卫
+router.beforeEach((to, from, next) => {
+  const token = Cookies.get('token')
+  if (!token && to.name !== 'login') {
+    // 未登录，跳转至登录页面
+    next('/login')
+  } else if (token && to.name === 'login') {
+    next('/home')
+  } else {
+    next()
+  }
+})
+
 new Vue({
   router,
   store,
   render: h => h(App),
+  created() {
+    store.commit('addMenu', router)
+  }
 }).$mount('#app')

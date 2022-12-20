@@ -5,7 +5,7 @@
             <!-- 面包屑 -->
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item v-for="item in tags" :key="item.path" :to="{ path: item.path }">
-                    {{ item.name }}
+                    {{ item.label }}
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -26,6 +26,7 @@
 <script>
 import { mapState } from 'vuex'
 import Cookie from 'js-cookie'
+import { logout } from '../api'
 export default {
     data() {
         return {}
@@ -36,9 +37,18 @@ export default {
         },
         handleCommand(command) {
             if (command === 'logout') {
-                Cookie.remove('token')
-                Cookie.remove('menu')
-                this.$router.push({ name: 'login' })
+                logout().then(({ data }) => {
+                    if (data.status === 0) {
+                        Cookie.remove('token')
+                        Cookie.remove('menu')
+                        this.$router.push({ name: 'login' })
+                    } else {
+                        this.$message.error(data.message)
+                    }
+                }).catch((err) => {
+                    console.log(err)
+                    this.$message.error('系统繁忙，请稍后重试~')
+                })
             }
         }
     },

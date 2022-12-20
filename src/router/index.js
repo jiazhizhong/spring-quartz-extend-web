@@ -22,33 +22,8 @@ const routes = [
                 path: '/home',
                 name: 'home',
                 label: '首页',
-                icon: 's-home',
                 url: 'Home.vue',
                 component: Home
-            },
-            {
-                path: '/joblist',
-                name: 'joblist',
-                label: '任务列表',
-                icon: 's-order',
-                url: 'JobList.vue',
-                component: JobList
-            },
-            {
-                path: '/jobmanage',
-                name: 'jobmanage',
-                label: '任务管理',
-                icon: 's-order',
-                url: 'JobManage.vue',
-                component: JobManage
-            },
-            {
-                path: '/instancemanage',
-                name: 'instancemanage',
-                label: '实例管理',
-                icon: 's-order',
-                url: 'InstanceManage.vue',
-                component: InstanceManage
             }
         ]
     },

@@ -99,7 +99,6 @@ export default {
                 if (data.status === 0) {
                     const pageResponse = data.data
                     this.tableData = pageResponse.data
-                    console.log(this.tableData)
                     this.total = pageResponse.total
                 } else {
                     this.$message.error(data.message)

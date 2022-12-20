@@ -20,7 +20,7 @@ export default {
             }
         },
         removeTab(state, payload) {
-            console.log(payload, 'removeTab')
+            // console.log(payload, 'removeTab')
             const index = state.tabsList.findIndex(item => item.name === payload.name)
             state.tabsList.splice(index, 1)
         },
