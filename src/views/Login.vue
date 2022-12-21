@@ -41,9 +41,9 @@ export default {
                     const data = { username: this.form.username, password: md5(this.form.password) }
                     login(data).then(({ data }) => {
                         if (data.status === 0) {
-                            // 登录成功，获取用户菜单
+                            // 登录成功
+                            this.$store.commit('initMenu', this.$router)
                             Cookies.set('token', '123456')
-                            this.getUserMenu()
                             this.$router.push('/home')
                         } else {
                             this.$message.error(data.message)
@@ -52,19 +52,6 @@ export default {
                         this.$message.error('系统繁忙，请稍后重试login~')
                     })
                 }
-            })
-        },
-        getUserMenu() {
-            getUserMenu().then(({ data }) => {
-                if (data.status === 0) {
-                    this.$store.commit('setMenu', data.data)
-                    this.$store.commit('addMenu', this.$router)
-                } else {
-                    this.$message.error(data.message)
-                }
-            }).catch((err) => {
-                console.log(err)
-                this.$message.error('系统繁忙，请稍后重试~')
             })
         }
     }

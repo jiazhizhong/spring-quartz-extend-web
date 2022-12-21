@@ -62,6 +62,6 @@ new Vue({
   store,
   render: h => h(App),
   created() {
-    store.commit('addMenu', router)
+    store.commit('initMenu', router)
   }
 }).$mount('#app')

@@ -25,7 +25,6 @@ http.interceptors.response.use(function (response) {
   // console.log(router.app.$route.path, 'router.app.$route.path')
   if (data.status === 401) {
     Cookies.remove('token')
-    Cookies.remove('menu')
     router.push('/login').catch(err => { })
   }
   return response;

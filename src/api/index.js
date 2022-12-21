@@ -4,8 +4,8 @@ import http from '../utils/request'
 export const login = (data) => {
     return http.post('/login', data, { withCredentials: true })
 }
-export const logout = () => {
-    return http.post('/logout', { withCredentials: true })
+export const logout = (data) => {
+    return http.post('/logout', data, { withCredentials: true })
 }
 
 // 菜单

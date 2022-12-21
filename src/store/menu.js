@@ -1,4 +1,6 @@
 import Cookies from "js-cookie"
+import { getUserMenu } from "@/api"
+
 const sysMenus = [
     {
         name: 'sys-manage',
@@ -53,47 +55,49 @@ export default {
         collapseMenu(state) {
             state.isCollapse = !state.isCollapse
         },
-        setMenu(state, menu) {
-            const menuCodes = menu.map(item => item.menuCode);
-            const menuArray = []
-            sysMenus.forEach(item => {
-                if (item.children) {
-                    item.children = item.children.filter(item => menuCodes.indexOf(item.name) !== -1)
-                    if (item.children.length > 0) {
-                        menuArray.push(item)
-                    }
-                } else {
-                    if (menuCodes.indexOf(item.name) !== -1) {
-                        menuArray.push(item)
-                    }
+
+        initMenu(state, router) {
+            getUserMenu().then(({ data }) => {
+                if (data.status !== 0) {
+                    const msg = data.status === 401 ? '未登录，无法获取菜单' : '获取菜单失败'
+                    console.log(msg)
+                    return
                 }
-            })
-            state.menuData = menuArray
-            Cookies.set('menu', JSON.stringify(menuArray))
-        },
-
-        addMenu(state, router) {
-            if (!Cookies.get('menu')) return
-
-            const menu = JSON.parse(Cookies.get('menu'))
-            state.menuData = menu
-
-            const menuArray = []
-            state.menuData.forEach(item => {
-                if (item.children) {
-                    item.children = item.children.map(item => {
+                // 创建菜单
+                const menu = data.data
+                const menuCodes = menu.map(item => item.menuCode);
+                state.menuData = []
+                sysMenus.forEach(item => {
+                    if (item.children) {
+                        item.children = item.children.filter(item => menuCodes.indexOf(item.name) !== -1)
+                        if (item.children.length > 0) {
+                            state.menuData.push(item)
+                        }
+                    } else {
+                        if (menuCodes.indexOf(item.name) !== -1) {
+                            state.menuData.push(item)
+                        }
+                    }
+                })
+                // 注册路由
+                const menuArray = []
+                state.menuData.forEach(item => {
+                    if (item.children) {
+                        item.children = item.children.map(item => {
+                            item.component = () => import(`../views/${item.url}`)
+                            return item
+                        })
+                        menuArray.push(...item.children)
+                    } else {
                         item.component = () => import(`../views/${item.url}`)
-                        return item
-                    })
-                    menuArray.push(...item.children)
-                } else {
-                    item.component = () => import(`../views/${item.url}`)
-                    menuArray.push(item)
-                }
-            })
-            console.log(menuArray, 'menuArray')
-            menuArray.forEach((item) => {
-                router.addRoute('Main', item)
+                        menuArray.push(item)
+                    }
+                })
+                menuArray.forEach((item) => {
+                    router.addRoute('Main', item)
+                })
+            }).catch((err) => {
+                console.log(err)
             })
         }
     }

@@ -40,7 +40,6 @@ export default {
                 logout().then(({ data }) => {
                     if (data.status === 0) {
                         Cookie.remove('token')
-                        Cookie.remove('menu')
                         this.$router.push({ name: 'login' })
                     } else {
                         this.$message.error(data.message)
