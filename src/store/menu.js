@@ -1,13 +1,15 @@
 import Cookies from "js-cookie"
-import { getUserMenu } from "@/api"
+import { getUserMenu, getMenus } from "@/api"
 
 const sysMenus = [
     {
+        id: '',
         name: 'sys-manage',
         label: '系统管理',
         icon: 's-management',
         children: [
             {
+                id: '',
                 name: 'user-manage',
                 label: '用户管理',
                 path: '/user-manage',
@@ -15,6 +17,7 @@ const sysMenus = [
                 url: 'UserManage.vue',
             },
             {
+                id: '',
                 name: 'role-manage',
                 label: '角色管理',
                 path: '/role-manage',
@@ -24,6 +27,7 @@ const sysMenus = [
         ]
     },
     {
+        id: '',
         name: 'job-list',
         label: '任务列表',
         path: '/job-list',
@@ -31,6 +35,7 @@ const sysMenus = [
         url: 'JobList.vue',
     },
     {
+        id: '',
         name: 'job-manage',
         label: '任务管理',
         path: '/job-manage',
@@ -38,6 +43,7 @@ const sysMenus = [
         url: 'JobManage.vue',
     },
     {
+        id: '',
         name: 'instance-manage',
         label: '实例管理',
         path: '/instance-manage',
@@ -49,7 +55,8 @@ const sysMenus = [
 export default {
     state: {
         isCollapse: false,
-        menuData: []
+        userMenuData: [],
+        sysMenuData: []
     },
     mutations: {
         collapseMenu(state) {
@@ -57,31 +64,58 @@ export default {
         },
 
         initMenu(state, router) {
+            // 初始化系统菜单（填充id，剔除隐藏的菜单）
+            getMenus().then(({ data }) => {
+                if (data.status !== 0) {
+                    const msg = data.status === 401 ? '未登录，无法获取菜单' : '获取菜单失败'
+                    console.log(msg)
+                    return
+                }
+                state.sysMenuData = []
+                const menuMap = new Map()
+                data.data.map(item => menuMap.set(item.menuCode, item.menuId));
+                sysMenus.forEach(item => {
+                    if (menuMap.has(item.name)) {
+                        item.id = menuMap.get(item.name)
+                        if (item.children) {
+                            item.children = item.children.filter(item => menuMap.has(item.name))
+                                .map(item => {
+                                    item.id = menuMap.get(item.name)
+                                    return item
+                                })
+                        }
+                        state.sysMenuData.push(item)
+                    }
+                })
+            }).catch((err) => {
+                console.log(err)
+            })
+
+            // 设置用户菜单
             getUserMenu().then(({ data }) => {
                 if (data.status !== 0) {
                     const msg = data.status === 401 ? '未登录，无法获取菜单' : '获取菜单失败'
                     console.log(msg)
                     return
                 }
-                // 创建菜单
-                const menu = data.data
-                const menuCodes = menu.map(item => item.menuCode);
-                state.menuData = []
+                state.userMenuData = []
+                const menuMap = new Map()
+                data.data.map(item => menuMap.set(item.menuCode, item.menuId));
                 sysMenus.forEach(item => {
                     if (item.children) {
-                        item.children = item.children.filter(item => menuCodes.indexOf(item.name) !== -1)
+                        item.children = item.children.filter(item => menuMap.has(item.name))
                         if (item.children.length > 0) {
-                            state.menuData.push(item)
+                            state.userMenuData.push(item)
                         }
                     } else {
-                        if (menuCodes.indexOf(item.name) !== -1) {
-                            state.menuData.push(item)
+                        if (menuMap.has(item.name)) {
+                            state.userMenuData.push(item)
                         }
                     }
                 })
                 // 注册路由
                 const menuArray = []
-                state.menuData.forEach(item => {
+                state.userMenuData.forEach(item => {
                     if (item.children) {
                         item.children = item.children.map(item => {
                             item.component = () => import(`../views/${item.url}`)

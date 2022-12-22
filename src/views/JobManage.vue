@@ -35,15 +35,15 @@
             </el-table-column>
             <el-table-column label="操作" width="210" fixed="right">
                 <template slot-scope="scope">
-                    <el-tooltip effect="light" placement="top" content="该操作不会删除Quart实例上的任务, 只是从任务列表中移除数据">
-                        <el-button type="primary" size="mini" @click="removeJob(scope.row)">移除</el-button>
-                    </el-tooltip>
-                    <el-tooltip effect="light" placement="top" content="该操作会永久删除Quart实例上的任务">
-                        <el-button type="primary" size="mini" @click="deleteJob(scope.row)">删除</el-button>
-                    </el-tooltip>
                     <el-button type="primary" size="mini" @click="handlePauseResume(scope.row)">
                         {{ scope.row.triggerState === 'PAUSED' ? '恢复' : '暂停' }}
                     </el-button>
+                    <el-tooltip effect="light" placement="top" content="该操作不会删除Quart实例上的任务, 只是从任务列表中移除数据">
+                        <el-button type="warning" size="mini" @click="removeJob(scope.row)">移除</el-button>
+                    </el-tooltip>
+                    <el-tooltip effect="light" placement="top" content="该操作会永久删除Quart实例上的任务">
+                        <el-button type="danger" size="mini" @click="deleteJob(scope.row)">删除</el-button>
+                    </el-tooltip>
                 </template>
             </el-table-column>
         </el-table>

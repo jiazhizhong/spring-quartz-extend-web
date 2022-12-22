@@ -53,7 +53,7 @@ export default {
             return this.$store.state.menu.isCollapse
         },
         menuData() {
-            return this.$store.state.menu.menuData
+            return this.$store.state.menu.userMenuData
         }
     }
 }
