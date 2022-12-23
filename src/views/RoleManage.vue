@@ -115,7 +115,7 @@ export default {
             this.roleForm = JSON.parse(JSON.stringify(row))
         },
         handleDel(row) {
-            this.$confirm(`此操作将永久角色${row.roleName}，是否继续?`, '提示', {
+            this.$confirm(`注意：删除角色${row.roleName}将导致使用该角色的用户失去角色下的权限，是否继续?`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
