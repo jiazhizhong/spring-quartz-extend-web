@@ -79,6 +79,9 @@ export const addOrUpdateUser = (data) => {
 export const deleteUser = (userid) => {
     return http.delete('user/delete/' + userid, { withCredentials: true })
 }
+export const modifyPassword = (data) => {
+    return http.post('/user/pwd', data, { withCredentials: true })
+}
 
 // 用户权限API
 export const getUserPermissions = (userid) => {
