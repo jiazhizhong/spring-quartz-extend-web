@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 
 const http = axios.create({
   baseURL: 'http://localhost:62000/api',
-  timeout: 1000,
+  timeout: 3000,
   // headers: {'X-Custom-Header': 'foobar'}
 })
 

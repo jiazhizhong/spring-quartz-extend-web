@@ -62,9 +62,28 @@ export const deleteRole = (roleId) => {
 }
 
 // 角色权限API
-export const getPermissions = (roleId) => {
+export const getRolePermissions = (roleId) => {
     return http.get('/role/permission/list/' + roleId, { withCredentials: true })
 }
-export const addOrUpdatePermission = (data) => {
+export const addOrUpdateRolePermission = (data) => {
     return http.post('/role/permission/addOrUpdate', data, { withCredentials: true })
+}
+
+// 用户API
+export const getUsers = () => {
+    return http.get('/user/list', { withCredentials: true })
+}
+export const addOrUpdateUser = (data) => {
+    return http.post('/user/addOrUpdate', data, { withCredentials: true })
+}
+export const deleteUser = (userid) => {
+    return http.delete('user/delete/' + userid, { withCredentials: true })
+}
+
+// 用户权限API
+export const getUserPermissions = (userid) => {
+    return http.get('/user/permission/list/' + userid, { withCredentials: true })
+}
+export const addOrUpdateUserPermission = (data) => {
+    return http.post('/user/permission/addOrUpdate', data, { withCredentials: true })
 }

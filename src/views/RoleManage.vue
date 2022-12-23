@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { getRoles, addOrUpdateRole, deleteRole, getPermissions, addOrUpdatePermission } from '../api'
+import { getRoles, addOrUpdateRole, deleteRole, getRolePermissions, addOrUpdateRolePermission } from '../api'
 export default {
     data() {
         return {
@@ -74,7 +74,6 @@ export default {
                 children: 'children',
                 label: 'label'
             },
-            // assginedPermissions: [],
             selectedRoleId: null
         }
     },
@@ -107,6 +106,7 @@ export default {
         handleAddRole() {
             this.roleDialogVisible = true
             this.roleTitle = '添加角色'
+            this.roleForm = { roleName: '', roleDesc: '' }
         },
         handleEdit(row) {
             this.roleDialogVisible = true
@@ -143,7 +143,7 @@ export default {
         },
         handleAssignPermission(row) {
             this.selectedRoleId = row.roleId
-            getPermissions(row.roleId).then(({ data }) => {
+            getRolePermissions(row.roleId).then(({ data }) => {
                 this.permissionDialogVisible = true
                 if (data.status === 0) {
                     const keys = data.data.map(item => item.menuId)
@@ -162,7 +162,7 @@ export default {
         submitPermission() {
             const menuIds = this.$refs.permissionTree.getCheckedKeys()
             const data = { roleId: this.selectedRoleId, menuIds: menuIds }
-            addOrUpdatePermission(data).then(({ data }) => {
+            addOrUpdateRolePermission(data).then(({ data }) => {
                 if (data.status === 0) {
                     this.getList()
                 } else {
