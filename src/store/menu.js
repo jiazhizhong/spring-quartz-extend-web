@@ -6,14 +6,14 @@ const sysMenus = [
         id: '',
         name: 'sys-manage',
         label: '系统管理',
-        icon: 's-management',
+        icon: 's-tools',
         children: [
             {
                 id: '',
                 name: 'user-manage',
                 label: '用户管理',
                 path: '/user-manage',
-                icon: 's-management',
+                icon: 'user',
                 url: 'UserManage.vue',
             },
             {
@@ -21,7 +21,7 @@ const sysMenus = [
                 name: 'role-manage',
                 label: '角色管理',
                 path: '/role-manage',
-                icon: 's-management',
+                icon: 's-custom',
                 url: 'RoleManage.vue',
             },
         ]
@@ -31,7 +31,7 @@ const sysMenus = [
         name: 'job-list',
         label: '任务列表',
         path: '/job-list',
-        icon: 's-order',
+        icon: 'sugar',
         url: 'JobList.vue',
     },
     {
@@ -39,7 +39,7 @@ const sysMenus = [
         name: 'job-manage',
         label: '任务管理',
         path: '/job-manage',
-        icon: 's-management',
+        icon: 'ice-cream',
         url: 'JobManage.vue',
     },
     {
@@ -47,7 +47,7 @@ const sysMenus = [
         name: 'instance-manage',
         label: '实例管理',
         path: '/instance-manage',
-        icon: 'refrigerator',
+        icon: 'coffee',
         url: 'InstanceManage.vue',
     },
 ]
