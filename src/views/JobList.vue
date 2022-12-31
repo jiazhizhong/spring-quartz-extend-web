@@ -31,7 +31,7 @@
             </el-table-column>
             <el-table-column prop="triggerState" label="触发器状态">
             </el-table-column>
-            <el-table-column prop="nextFireTime" label="updateTime">
+            <el-table-column prop="cron" label="cron表达式">
             </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">

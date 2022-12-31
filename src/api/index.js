@@ -41,6 +41,9 @@ export const deleteJob = (data) => {
 export const refreshJob = (data) => {
     return http.post('/job/refresh', data, { withCredentials: true })
 }
+export const scheduleJob = (data) => {
+    return http.post('/job/schedule', data, { withCredentials: true })
+}
 
 // 实例API
 export const getInstances = (params) => {
