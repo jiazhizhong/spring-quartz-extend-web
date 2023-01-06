@@ -82,7 +82,8 @@ export default {
                 state.sysMenuData = []
                 const menuMap = new Map()
                 data.data.map(item => menuMap.set(item.menuCode, item.menuId));
-                sysMenus.forEach(item => {
+                const sysMenus1 = JSON.parse(JSON.stringify(sysMenus))
+                sysMenus1.forEach(item => {
                     if (menuMap.has(item.name)) {
                         item.id = menuMap.get(item.name)
                         if (item.children) {
@@ -109,7 +110,8 @@ export default {
                 state.userMenuData = []
                 const menuMap = new Map()
                 data.data.map(item => menuMap.set(item.menuCode, item.menuId));
-                sysMenus.forEach(item => {
+                const sysMenus2 = JSON.parse(JSON.stringify(sysMenus))
+                sysMenus2.forEach(item => {
                     if (item.children) {
                         item.children = item.children.filter(item => menuMap.has(item.name))
                         if (item.children.length > 0) {
