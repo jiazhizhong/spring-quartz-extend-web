@@ -93,3 +93,8 @@ export const getUserPermissions = (userid) => {
 export const addOrUpdateUserPermission = (data) => {
     return http.post('/user/permission/addOrUpdate', data, { withCredentials: true })
 }
+
+// 操作日志API
+export const getOperationLogs = (params) => {
+    return http.get('/operation-log/list', { ...params, ...{ withCredentials: true } })
+}

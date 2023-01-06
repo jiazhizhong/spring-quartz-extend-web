@@ -24,6 +24,14 @@ const sysMenus = [
                 icon: 's-custom',
                 url: 'RoleManage.vue',
             },
+            {
+                id: '',
+                name: 'operation-log',
+                label: '操作日志',
+                path: '/operation-log',
+                icon: 'grape',
+                url: 'OperationLog.vue',
+            },
         ]
     },
     {
