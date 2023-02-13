@@ -2,10 +2,10 @@
     <el-form ref="form" label-width="70px" class="login-container" :model="form" :rules="rules" :inline="true">
         <h3 class="login-title">系统登录</h3>
         <el-form-item label="用户名" prop="username">
-            <el-input v-model="form.username" placeholder="请输入账号"></el-input>
+            <el-input v-model="form.username" placeholder="请输入账号" @keydown.enter.native="handleLogin"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-            <el-input v-model="form.password" placeholder="请输入密码" type="password"></el-input>
+            <el-input v-model="form.password" placeholder="请输入密码" type="password" @keydown.enter.native="handleLogin"></el-input>
         </el-form-item>
         <el-form-item style="display:flex; justify-content:center">
             <el-button type="primary" @click="handleLogin">登录</el-button>
