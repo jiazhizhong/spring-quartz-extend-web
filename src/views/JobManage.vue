@@ -48,7 +48,7 @@
             </el-table-column>
             <el-table-column prop="nextFireTime" width="160" label="下次执行时间">
             </el-table-column>
-            <el-table-column prop="triggerState" width="100" label="触发器状态">
+            <el-table-column prop="triggerStateDesc" width="100" label="触发器状态">
             </el-table-column>
             <el-table-column prop="cron" label="cron表达式">
             </el-table-column>
